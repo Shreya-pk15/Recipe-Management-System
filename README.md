@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Mini Project DBMS
 
 This project is a recipe management web application built as a mini project for a DBMS course. It allows users to browse, add, edit, and manage recipes, with separate interfaces for users and admins.
@@ -33,3 +34,7 @@ Screenshots and images are available in the `static/images/` folder.
 
 ## License
 This project is for educational purposes.
+=======
+# Recipe-Management-System
+A recipe management web app built with Flask and SQL as part of a DBMS course. Features user authentication, recipe categorization, admin controls, and responsive UI. Allows users to browse, add, and manage recipes with image support and profile management.
+>>>>>>> f0dab2e02e44652de19e1d6b7cde3686c4780368
