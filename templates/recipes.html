@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ recipe['recipeName'] }} - Recipe Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+    .recipe-block {
+    padding: 20px;
+    border: 1px solid #ccc; /* Border for each block */
+    border-radius: 5px; /* Rounded corners */
+    margin: 10px; /* Space between blocks */
+    width: 300px; /* Width of each block */
+    text-align: center; /* Center align text */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+    overflow: hidden; /* Prevent overflow of content */
+    }
+
+.recipe-block img {
+    width: 100%; /* Full width of the block */
+    height: 200px; /* Fixed height for the image */
+    object-fit: cover; /* Ensure the image covers the area without distortion */
+    border-top-left-radius: 5px; /* Rounded corners for the top */
+    border-top-right-radius: 5px; /* Rounded corners for the top */
+}
+
+.recipe-name {
+    padding: 10px; /* Space around the recipe name */
+    font-weight: bold; /* Bold text for the name */
+}
+
+/* Styling for the recipe title to make it larger and bold */
+
+.recipe-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center-aligns content horizontally */
+    justify-content: center; /* Centers content vertically within the header */
+    margin: 20px 0;
+    text-align: center;
+}
+
+
+.recipe-title-container {
+    display: block; /* Ensure title is on its own line */
+    margin-bottom: 10px;
+}
+
+.recipe-title {
+    font-size: 2.5em; /* Large font size */
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.recipe-details-container {
+    display: block; /* Ensure details are on their own line below the title */
+    margin-top: 5px;
+    text-align: center;
+}
+
+
+.recipe-details {
+    font-size: 1.2em;
+    color: #666;
+    margin-top: 10px;
+}
+
+
+/* Proportionate table layout for image and ingredients */
+.recipe-table {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal-width columns */
+    gap: 20px;
+    margin: 20px;
+    align-items: start;
+}
+
+/* Style for the recipe image section */
+.recipe-image {
+    background-color: #f3f3f3; /* Light background to match ingredients section */
+    padding: 20px;
+    /* border-radius: 10px; */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Subtle shadow */
+    text-align: center; /* Center image and details */
+    max-width: 500px;
+}
+
+/* .recipe-image img {
+    max-width: 120%;
+    height: 350px; /* Adjust height for larger display
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+} */
+.recipe-table .recipe-cell img {
+    width: 600px; /* Set desired width */
+    height: 300px; /* Set desired height */
+    object-fit: cover; /* Ensure the image covers the area without distortion */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.recipe-image p {
+    margin-top: 10px;
+    color: #555;
+    font-size: 1.1em;
+}
+
+/* Styling the ingredients section to make it attractive */
+.recipe-ingredients {
+    margin-left: 100px;
+    background-color: #f9f9f9; /* Light background */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    max-width: 500px; /* Limits the width */
+    text-align: left;
+}
+
+.recipe-ingredients h2 {
+    text-align: center;
+    color: #333;
+    font-size: 1.5em;
+    margin-bottom: 15px;
+}
+
+/* Removing max-width to fully occupy the grid columns */
+.recipe-ingredients,
+.recipe-image {
+    width: 120%;
+}
+
+.recipe-ingredients ul {
+    list-style-type: none; /* Remove default bullets */
+    padding: 0;
+    margin: 0;
+}
+
+/* Style for each ingredient item */
+.recipe-ingredients ul li {
+    position: relative;
+    padding: 10px 0;
+    padding-left: 25px;
+    font-size: 1.1em;
+    color: #555;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Adding custom bullet icon for ingredients */
+.recipe-ingredients ul li::before {
+    content: "🍲 "; /* Custom icon (can be replaced with other icons or emojis) */
+    position: absolute;
+    left: 0;
+    top: 10px;
+    font-size: 1.2em;
+    color: #ff6347;
+}
+
+/* Additional styling for steps section */
+.recipe-steps {
+    background-color: #f9f9f9; /* Light background */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    max-width: 800px; /* Limits the width */
+    text-align: left;
+   margin-left: 120px;
+}
+
+.recipe-steps h2 {
+    margin-top: 40px;
+    text-align: left;
+    color: #333;
+    font-size: 1.5em;
+}
+
+.recipe-steps ul {
+    list-style-type: none; /* Remove default bullets */
+    padding: 0;
+    margin: 0;
+}
+
+/* Style for each step item */
+.recipe-steps ul li {
+    position: relative;
+    padding: 10px 0;
+    padding-left: 25px;
+    font-size: 1.1em;
+    color: #555;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Custom bullet icon for steps */
+.recipe-steps ul li::before {
+    content: "🍴 "; /* Custom icon (optional, can be replaced) */
+    position: absolute;
+    left: 0;
+    top: 10px;
+    font-size: 1.2em;
+    color: #ff6347;
+}
+
+/* Ensure the recipe image takes up the full grid space without extra container styling
+.recipe-cell img {
+    max-width: 120%;
+    height: 120%;
+    border-radius: 10px;
+} */
+
+/* Styles for recipe recommendations */
+.recommendations {
+    display: flex;
+    justify-content: center; /* Center the blocks */
+    flex-wrap: wrap; /* Allow wrapping to the next line */
+    margin-top: 30px; /* Space above the recommendations section */
+}
+/* Styling for the recommendations heading */
+.recommendations-heading {
+    margin-right: 30px;
+    text-align: center; /* Center the heading */
+    margin-top: 60px; /* Space above the heading */
+    font-size: 30px; /* Font size for the heading */
+    font-weight: bold; /* Bold text */
+
+}
+
+.steps-rating-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* Two columns: Steps takes 2/3 width, rating 1/3 */
+    gap: 20px; /* Space between columns */
+    margin: 20px;
+}
+
+.rating-section {
+    background-color: #f9f9f9; /* Light background */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    max-width: 400px; /* Limits the width */
+    text-align: center;
+}
+
+.rating-section h2 {
+    font-size: 1.5em;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.rating-section p {
+    font-size: 1.1em;
+    color: #555;
+}
+
+.rating-section form {
+    margin-top: 10px;
+}
+
+.rating-section select,
+.rating-section button {
+    padding: 8px 12px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.rating-section button {
+    background-color: #ff6347;
+    color: #fff;
+    cursor: pointer;
+}
+
+.rating-section button:hover {
+    background-color: #e5533d;
+}
+
+        .logout-button {
+            margin: 0px;
+            background-color: black ;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 12px;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">
+            <!-- <img src="static\images\TastyTrack.jpg" alt="TastyTrack" width="50" height="50"> -->
+            <a href="{{ url_for('home') }}">Tasty Track</a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('about') }}">About</a></li>
+            <li><a href="{{ url_for('profile') }}"><i class="fas fa-user"></i></a></li>
+            <form id="logout-form" action="{{ url_for('logout') }}" method="GET">
+                <button type="submit" class="logout-button">Logout</button>
+            </form>
+        </ul>
+    </nav>
+
+    <!-- Recipe Header -->
+    <div class="recipe-header">
+        <!-- <div class="recipe-title-container"> -->
+            <h1 class="recipe-title">{{ recipe['recipeName'] }}</h1>
+        <!-- </div> -->
+        <!-- <div class="recipe-details-container"> -->
+            <center><p class="recipe-details"><br>Cooking Time: {{ recipe['cookingTime'] }} minutes | Serving Size: {{ recipe['servingSize'] }}</p></center>
+        <!-- </div> -->
+        <!-- <button id="favorite-btn" class="favorite-btn" data-recipe-id="{{ recipe['recipeID'] }}">
+            <i class="far fa-heart" id="heart-icon"></i>
+        </button> -->
+    </div>
+
+    <!-- Recipe Content Section with Ingredients on Left and Image on Right -->
+<div class="recipe-table">
+    <!-- Ingredients List (Positioned on the Left) -->
+    <div class="recipe-cell recipe-ingredients">
+        <h2>Ingredients</h2>
+        <ul>
+            {% for ingredient in ingredients %}
+                <li>{{ ingredient.quantity }} of {{ ingredient['ingredientName'] }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Recipe Image (Positioned on the Right, no container) -->
+    <div class="recipe-cell">
+        <img src="{{ url_for('static', filename='images/' ~ recipe['imageLink']) }}" alt="{{ recipe['recipeName'] }}" width="400" height="300">
+        <!-- <p>Cooking Time: {{ recipe['cookingTime'] }} minutes</p>
+        <p>Serving Size: {{ recipe['servingSize'] }}</p> -->
+    </div>
+</div>
+
+
+
+<div class="steps-rating-container">
+    <!-- Steps Section -->
+    <div class="recipe-steps">
+        <h2>Steps</h2>
+        <ul>
+            {% for step in steps %}
+                <li>Step {{ step['stepNum'] }}: {{ step['description'] }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Rating Section -->
+    <div class="rating-section">
+        <h2>Rate this Recipe</h2>
+        <p>Average Rating: {{ average_rating }}/5</p>
+        <form action="{{ url_for('rate_recipe', recipe_id=recipe['recipeID']) }}" method="POST">
+            <label for="rating">Your Rating:</label>
+            <select name="rating" id="rating" required>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            <button type="submit">Submit Rating</button>
+        </form>
+    </div>
+</div>
+
+<!-- Display Flash Messages -->
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="alert alert-info">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-content">
+        <p>&copy; 2024 Tasty Track. All rights reserved.</p>
+        <ul class="footer-links">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+        </ul>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

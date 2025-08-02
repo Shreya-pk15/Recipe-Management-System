@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="static/styles.css">
+    <link rel="stylesheet" href="static/home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- For Icons -->
+
+    <style>
+        /* Body Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header Styling */
+        header {
+            background-color: #f8b400;
+            color: #333;
+            padding: 10px 0;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color:#f8b400; /* Yellow color */
+            overflow: hidden;
+            text-align: right; /* Right-align text */
+            padding-right: 10px; /* Optional padding for spacing */
+        }
+
+        .navbar a {
+            display: inline-block;
+            color: #333; /* Dark text for contrast */
+            padding: 2px 12px;
+            text-decoration: none;
+        }
+
+        .navbar a:hover {
+            background-color:#f8b400;
+            color: black;
+        }
+
+        .logo img {
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        /* Main Page Title */
+        h1 {
+            text-align: center;
+            font-size: 2em;
+            margin: 20px;
+            color: #444;
+        }
+
+        /* Stats Section */
+        .dashboard-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 20px auto;
+            max-width: 80%;
+        }
+
+        .dashboard-card {
+            width: 200px;
+            padding: 15px;
+            text-align: center;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        }
+
+        .dashboard-card h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .dashboard-card a {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 16px;
+            color: #fff;
+            background-color: #f8b400;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .dashboard-card a:hover {
+            background-color: #0056b3;
+        }
+
+        /* Footer Styling */
+        .footer {
+            background-color: #333;
+            color: #fff;
+            padding: 15px 20px;
+            text-align: center;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer p {
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .footer-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .logout-button {
+            background-color : black;
+            color: white;
+            border: none;
+            padding: 10px 19px;
+            border-radius: 5px;
+            margin-right: 15px;
+            cursor: pointer;
+
+        }
+
+        .social-icons a {
+            color: #fff;
+            margin: 0 10px;
+            font-size: 1.2em;
+        }
+
+        .social-icons a:hover {
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Dashboard Header -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="static/images/TastyTrack.jpg" alt="Tasty Truck" width="70" height="40">
+                <a href="home">Tasty Track</a>
+            </div>
+            <form id="logout-form" action="{{ url_for('logout') }}" method="GET">
+                <button type="submit" class="logout-button">Logout</button>
+            </form>
+        </nav>
+
+    </header>
+    <br><br>
+    <!-- Main Content -->
+    <h1>Admin Dashboard</h1>
+
+    <!-- Display the stats -->
+    <div class="dashboard-stats">
+        <div class="dashboard-card">
+            <h2>Users: {{ user_count }}</h2>
+            <a href="/manage_users">Manage Users</a>
+        </div>
+        <div class="dashboard-card">
+            <h2>Recipes: {{ recipe_count }}</h2>
+            <a href="/manage_recipes">Manage Recipes</a>
+        </div>
+        <div class="dashboard-card">
+            <h2>Categories</h2>
+            <a href="/manage_categories">Manage Categories</a>
+        </div>
+    </div>
+<br><br><br><br><br><br><br><br>
+<br><br><br><br>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 Tasty Track. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+            </ul>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
+

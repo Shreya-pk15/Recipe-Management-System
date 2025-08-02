@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Management System</title>
+    <!-- Linking the CSS file from the static folder -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+    <!-- Include Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .logout-button {
+            background-color : black;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 5px;
+            margin-left: 12px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">
+            <img src="static\images\TastyTrack.jpg" alt="Tasty Truck" width="70" height="40">
+            <a href="home">Tasty Track</a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="home">Home</a></li>
+            <li><a href="about">About</a></li>
+            <li><a href="profile"><i class="fas fa-user"></i></a></li>
+            <form id="logout-form" action="{{ url_for('logout') }}" method="GET">
+                <button type="submit" class="logout-button">Logout</button>
+            </form>
+        </ul>
+    </nav>
+
+    <!-- Image from static folder -->
+    <img src="static\images\home.png" alt="home" width="1520" height="500">
+
+    <div class="search-container">
+        <form id="search-form" onsubmit="event.preventDefault(); searchRecipes();">
+            <input type="text" id="recipe-search" placeholder="Enter an ingredient (e.g., egg)" required>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    <div id="recipe-results"></div> <!-- Container for displaying results -->
+
+
+
+    <!-- Recommendations Heading -->
+    <div class="recommendations-heading">Top Rated Recipes!!</div>
+    <div class="recommendations">
+        <div class="recipe-block">
+            <img src="static\images\TiramisuCake.jpeg" alt="Tiramisu Cake">
+            <div class="recipe-name">
+                <a href="{{ url_for('recipe_details', recipe_id=1) }}">Tiramisu Cake</a>
+            </div>
+        </div>
+        <div class="recipe-block">
+            <img src="static\images\vegBiryani.jpeg"  alt="Veg Biryani">
+            <div class="recipe-name">
+                <a href="{{ url_for('recipe_details', recipe_id=2) }}">Veg Biryani</a>
+            </div>
+        </div>
+        <div class="recipe-block">
+            <img src="static\images\fishFry.jpeg"  alt="Fish Fry">
+            <div class="recipe-name">
+                <a href="{{ url_for('recipe_details', recipe_id=3) }}">Fish Fry</a>
+            </div>
+        </div>
+        <div class="recipe-block">
+            <img src="static\images\pasta.jpeg"  alt="Paste">
+            <div class="recipe-name">
+                <a href="{{ url_for('recipe_details', recipe_id=4) }}">Pasta</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 Tasty Track. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+            </ul>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer>
+    <script>
+        function searchRecipes() {
+            // Get the ingredient input from the form
+            const ingredient = document.getElementById("recipe-search").value;
+
+            // Fetch data from the server
+            fetch(`/search_recipes?ingredient=${encodeURIComponent(ingredient)}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Data received:", data); // Debugging line to verify data
+
+                    const resultsDiv = document.getElementById("recipe-results");
+                    resultsDiv.innerHTML = ""; // Clear previous results
+
+                    if (data.length === 0) {
+                        resultsDiv.innerHTML = "<p>No recipes found for the given ingredient.</p>";
+                    } else {
+                        data.forEach(recipe => {
+                            console.log("Processing recipe:", recipe); // Debugging line for each recipe
+
+                            // Create a new div for each recipe result
+                            const recipeBlock = document.createElement("div");
+                            recipeBlock.classList.add("recipe-block");
+
+                            recipeBlock.innerHTML = `
+                                <img src="${recipe.imageLink.startsWith("http") ? recipe.imageLink : "/static/images/" + recipe.imageLink}" alt="${recipe.recipeName}">
+                                <div class="recipe-name">
+                                    <a href="/recipe/${recipe.recipeID}">${recipe.recipeName}</a>
+                                </div>
+                            `;
+
+                            resultsDiv.appendChild(recipeBlock);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching recipes:", error);
+                    const resultsDiv = document.getElementById("recipe-results");
+                    resultsDiv.innerHTML = "<p>Error fetching recipes. Please try again.</p>";
+                });
+        }
+    </script>
+
+</body>
+</html>
+
+

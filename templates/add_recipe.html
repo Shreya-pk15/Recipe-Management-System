@@ -1,0 +1,114 @@
+<!-- add_recipe.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Recipe</title>
+    <link rel="stylesheet" href="static/styles.css">
+    <script>
+        let stepCount = 0;
+        let ingredientCount = 0;
+
+        function addStep() {
+            stepCount++;
+            const stepContainer = document.getElementById('steps-container');
+            const stepHTML = `
+                <div id="step-${stepCount}" class="step-item">
+                    <label for="step-${stepCount}-description">Step ${stepCount} Description:</label>
+                    <textarea name="steps[]" id="step-${stepCount}-description" required></textarea>
+                    <button type="button" onclick="removeStep(${stepCount})">Remove Step</button>
+                </div>
+            `;
+            stepContainer.insertAdjacentHTML('beforeend', stepHTML);
+        }
+
+        function removeStep(stepId) {
+            const stepElement = document.getElementById(`step-${stepId}`);
+            stepElement.remove();
+        }
+
+        function addIngredient() {
+            ingredientCount++;
+            const ingredientContainer = document.getElementById('ingredients-container');
+            const ingredientHTML = `
+                <div id="ingredient-${ingredientCount}" class="ingredient-item">
+                    <label for="ingredient-${ingredientCount}-name">Ingredient ${ingredientCount} Name:</label>
+                    <input type="text" name="ingredients[]" id="ingredient-${ingredientCount}-name" required>
+
+                    <label for="ingredient-${ingredientCount}-quantity">Quantity:</label>
+                    <input type="text" name="quantities[]" id="ingredient-${ingredientCount}-quantity" required>
+                    
+                    <button type="button" onclick="removeIngredient(${ingredientCount})">Remove Ingredient</button>
+                </div>
+            `;
+            ingredientContainer.insertAdjacentHTML('beforeend', ingredientHTML);
+        }
+
+        function removeIngredient(ingredientId) {
+            const ingredientElement = document.getElementById(`ingredient-${ingredientId}`);
+            ingredientElement.remove();
+        }
+    </script>
+</head>
+<body>
+
+    <h2>Add a New Recipe</h2>
+
+    <!-- Display any flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="flash {{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Recipe Form -->
+    <form action="/save_recipe" method="POST">
+        <div>
+            <label for="recipeName">Recipe Name:</label>
+            <input type="text" name="recipeName" id="recipeName" required>
+        </div>
+
+        <div>
+            <label for="imageLink">Image Link:</label>
+            <input type="text" name="imageLink" id="imageLink">
+        </div>
+
+        <div>
+            <label for="cookingTime">Cooking Time (in minutes):</label>
+            <input type="number" name="cookingTime" id="cookingTime" required>
+        </div>
+
+        <div>
+            <label for="servingSize">Serving Size:</label>
+            <input type="number" name="servingSize" id="servingSize" required>
+        </div>
+
+        <!-- Ingredients Section -->
+        <h3>Ingredients</h3>
+        <div id="ingredients-container">
+            <!-- Ingredient fields will be dynamically added here -->
+        </div>
+        <button type="button" onclick="addIngredient()">Add Ingredient</button>
+
+        <!-- Steps Section -->
+        <h3>Steps</h3>
+        <div id="steps-container">
+            <!-- Step fields will be dynamically added here -->
+        </div>
+        <button type="button" onclick="addStep()">Add Step</button>
+
+        <div>
+            <button type="submit">Save Recipe</button>
+        </div>
+    </form>
+
+    <a href="/manage_recipes">Back to Manage Recipes</a>
+
+</body>
+</html>

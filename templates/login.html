@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- Link to external CSS file -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        // Password view
+        function togglePassword() {
+            const passwordField = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text'; // Show password
+                toggleIcon.classList.remove('fa-eye'); // Change to eye slash
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type = 'password'; // Hide password
+                toggleIcon.classList.remove('fa-eye-slash'); // Change to eye
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+        
+        // Animate text line by line
+        function animateText(element, text, callback) {
+            element.textContent = ''; // Clear existing text
+            let i = 0;
+
+            function showLetter() {
+                if (i < text.length) {
+                    element.textContent += text[i]; // Append letter
+                    i++;
+                    setTimeout(showLetter, 100); // Adjust timing (100ms per letter)
+                } else if (callback) {
+                    callback(); // Call callback when done
+                }
+            }
+            showLetter();
+        }
+
+        // Run animation when the page loads
+        window.onload = function() {
+            const firstLine = document.querySelector('.animated-text');
+            const secondLine = document.querySelector('.next-line');
+
+            // Animate the first line, then the second line
+            animateText(firstLine, firstLine.textContent, function() {
+                secondLine.style.display = 'block'; // Show the second line
+                animateText(secondLine, secondLine.textContent); // Animate the second line
+            });
+        };
+    </script>
+</head>
+<body>
+    <div class="login-page-container">
+        <!-- Left section with inspiring text -->
+        <div class="left-section">
+           <h1><span class="animated-text">Hungry for something new?</span></h1>
+           <p class="next-line" style="display: none;">
+            Log in and let us inspire you with endless recipe ideas based on your ingredients. Your taste buds will thank you!</p>
+        </div>
+
+        <!-- Right section with the login form -->
+        <div class="right-section">
+            <div class="login-container">
+                <h2>Login</h2>
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <ul class="flashes">
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+                <form action="{{ url_for('login') }}" method="POST">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                    
+                    <label for="password">Password:</label>
+                    <div style="position: relative;">
+                        <input type="password" id="password" name="password" required>
+                        <span onclick="togglePassword()" style="cursor: pointer; position: absolute; right: 0px; top: 10px;">
+                            <i id="toggleIcon" class="fa fa-eye"></i>
+                        </span>
+                    </div>
+                    
+                    <button type="submit">Login</button>
+                </form>
+                <p>Don't have an account? <a href="{{ url_for('signup') }}">Sign up here</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+

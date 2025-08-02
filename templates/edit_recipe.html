@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Recipe</title>
+</head>
+<body>
+    <h1>Edit Recipe</h1>
+    <form method="POST">
+        <label for="recipeName">Recipe Name:</label>
+        <input type="text" id="recipeName" name="recipeName" value="{{ recipe.recipeName }}" required>
+        <br>
+
+        <label for="imageLink">Image URL:</label>
+        <input type="text" id="imageLink" name="imageLink" value="{{ recipe.imageLink }}">
+        <br>
+
+        <label for="cookingTime">Cooking Time (in minutes):</label>
+        <input type="number" id="cookingTime" name="cookingTime" value="{{ recipe.cookingTime }}">
+        <br>
+
+        <label for="servingSize">Serving Size:</label>
+        <input type="number" id="servingSize" name="servingSize" value="{{ recipe.servingSize }}">
+        <br>
+
+        <!-- Display and Edit Ingredients -->
+        <h3>Ingredients</h3>
+        <table id="ingredientsTable">
+            {% for ingredient in ingredients %}
+    <tr id="ingredient_{{ ingredient.ingredientID }}">
+        <td><input type="text" name="ingredientName_{{ ingredient.ingredientID }}" value="{{ ingredient.ingredientName }}"></td>
+        <td><input type="text" name="quantity_{{ ingredient.ingredientID }}" value="{{ ingredient.quantity }}"></td>
+        <td><button type="button" onclick="removeIngredient({{ ingredient.ingredientID }})">Delete</button></td>
+    </tr>
+{% endfor %}
+
+{% for step in steps %}
+    <tr id="step_{{ step.stepID }}">
+        <td><input type="text" name="stepDescription_{{ step.stepID }}" value="{{ step.description }}"></td>
+        <td><button type="button" onclick="removeStep({{ step.stepID }})">Delete</button></td>
+    </tr>
+{% endfor %}
+
+        </table>
+        <br>
+        <button type="button" id="addIngredientBtn">Add Ingredient</button>
+
+        <!-- Display and Edit Steps -->
+        <h3>Steps</h3>
+        <table id="stepsTable">
+            {% for step in steps %}
+                <tr id="step_{{ step.stepID }}">
+                    <td>
+                        <input type="text" name="stepDescription_{{ step.stepID }}" value="{{ step.description }}">
+                    </td>
+                    <td>
+                        <button type="button" onclick="removeStep({{ step.stepID }})">Delete</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <br>
+        <button type="button" id="addStepBtn">Add Step</button>
+
+        <br><br>
+        <button type="submit">Save Recipe</button>
+    </form>
+
+    <script>
+        // Add Ingredient Row
+        document.getElementById('addIngredientBtn').addEventListener('click', function() {
+            var table = document.getElementById('ingredientsTable');
+            var row = table.insertRow();
+            row.innerHTML = `
+                <td><input type="text" name="ingredientName_new[]"></td>
+                <td><input type="text" name="quantity_new[]"></td>
+                <td><button type="button" onclick="removeIngredient(this)">Delete</button></td>
+            `;
+        });
+
+        // Remove Ingredient Row
+        function removeIngredient(id) {
+            document.getElementById('ingredient_' + id).remove();
+        }
+
+        // Add Step Row
+        document.getElementById('addStepBtn').addEventListener('click', function() {
+            var table = document.getElementById('stepsTable');
+            var row = table.insertRow();
+            row.innerHTML = `
+                <td><input type="text" name="stepDescription_new[]"></td>
+                <td><button type="button" onclick="removeStep(this)">Delete</button></td>
+            `;
+        });
+
+        // Remove Step Row
+        function removeStep(id) {
+            document.getElementById('step_' + id).remove();
+        }
+    </script>
+
+</body>
+</html>
